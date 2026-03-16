@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RankSarathi.in – Govt Jobs, Results & More</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ════════ PASTE ALL YOUR EXISTING CSS HERE ════════ */
+/* Copy everything inside <style>...</style> from your ranksarathi-v2.html */
+/* Then add the new styles below */
+
+:root{
+  --bg:#080810;--glass:rgba(255,255,255,.055);--glass2:rgba(255,255,255,.09);
+  --gb:rgba(255,255,255,.12);--accent:#4f8cff;--accent2:#a259ff;--accent3:#00e5aa;
+  --gold:#ffd166;--red:#ff5e7a;--text:#eeeef8;--text2:#8888aa;--r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;}
+
+/* Loading skeleton */
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:10px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{height:130px;border-radius:18px;margin-bottom:12px;}
+.skel-title{height:18px;width:80%;margin-bottom:8px;}
+.skel-line{height:12px;width:60%;margin-bottom:6px;}
+
+/* Toast notification */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:9999;background:#1a1a2e;border:1px solid var(--gb);border-radius:14px;padding:12px 24px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .35s;opacity:0;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{border-color:rgba(0,229,170,.35);color:var(--accent3);}
+.toast.error{border-color:rgba(255,94,122,.35);color:var(--red);}
+
+/* ════════════════════════
+   ADMIN PANEL
+════════════════════════ */
+#adminPanel{display:none;position:fixed;inset:0;z-index:2000;background:var(--bg);overflow-y:auto;}
+.admin-nav{background:rgba(10,10,20,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb);padding:14px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+.admin-logo{font-size:16px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.admin-badge{font-size:10px;font-weight:700;background:rgba(255,94,122,.2);color:var(--red);border:1px solid rgba(255,94,122,.3);padding:3px 9px;border-radius:7px;}
+.admin-nav-right{margin-left:auto;display:flex;gap:8px;}
+.admin-tab{padding:7px 16px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--text2);background:var(--glass);border:1px solid transparent;transition:all .2s;font-family:'Sora',sans-serif;}
+.admin-tab.active{color:#fff;background:rgba(79,140,255,.15);border-color:rgba(79,140,255,.3);}
+.admin-tab:hover{color:#fff;background:var(--glass2);}
+.admin-close{width:34px;height:34px;border-radius:9px;background:var(--glass);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text2);transition:all .2s;font-family:'Sora',sans-serif;}
+.admin-close:hover{background:rgba(255,94,122,.15);color:var(--red);}
+
+.admin-body{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
+.admin-section{display:none;}
+.admin-section.active{display:block;}
+
+/* Stats row */
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px;}
+.astat{background:var(--glass);border:1px solid var(--gb);border-radius:16px;padding:18px 20px;}
+.astat-val{font-size:28px;font-weight:800;color:#fff;margin-bottom:4px;}
+.astat-label{font-size:12px;color:var(--text2);font-weight:500;}
+.astat.blue .astat-val{color:var(--accent);}
+.astat.green .astat-val{color:var(--accent3);}
+.astat.red .astat-val{color:var(--red);}
+.astat.gold .astat-val{color:var(--gold);}
+
+/* Form */
+.admin-form-card{background:var(--glass);border:1px solid var(--gb);border-radius:20px;padding:24px;margin-bottom:20px;}
+.admin-form-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:11.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+.form-input,.form-select,.form-textarea{background:rgba(255,255,255,.06);border:1px solid var(--gb);border-radius:11px;padding:11px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(79,140,255,.45);box-shadow:0 0 0 3px rgba(79,140,255,.1);}
+.form-select{cursor:pointer;}
+.form-select option{background:#1a1a2e;color:#fff;}
+.form-textarea{resize:vertical;min-height:90px;}
+.form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.btn-save{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:11px 28px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Sora',sans-serif;box-shadow:0 4px 18px rgba(79,140,255,.3);transition:box-shadow .2s;}
+.btn-save:hover{box-shadow:0 8px 28px rgba(79,140,255,.5);}
+.btn-cancel{background:var(--glass);border:1px solid var(--gb);color:var(--text);padding:11px 20px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;transition:background .2s;}
+.btn-cancel:hover{background:var(--glass2);}
+.btn-danger{background:rgba(255,94,122,.12);border:1px solid rgba(255,94,122,.25);color:var(--red);padding:11px 20px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;transition:background .2s;}
+.btn-danger:hover{background:rgba(255,94,122,.22);}
+
+/* Jobs list in admin */
+.admin-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.admin-item{background:var(--glass);border:1px solid var(--gb);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;transition:border-color .2s;}
+.admin-item:hover{border-color:rgba(79,140,255,.3);}
+.admin-item-icon{font-size:22px;flex-shrink:0;width:42px;height:42px;border-radius:11px;background:rgba(79,140,255,.12);display:flex;align-items:center;justify-content:center;}
+.admin-item-info{flex:1;min-width:0;}
+.admin-item-title{font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-item-meta{font-size:11.5px;color:var(--text2);margin-top:3px;}
+.admin-item-actions{display:flex;gap:7px;flex-shrink:0;}
+.btn-edit{padding:6px 14px;border-radius:8px;background:rgba(79,140,255,.12);border:1px solid rgba(79,140,255,.25);color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;transition:background .2s;}
+.btn-edit:hover{background:rgba(79,140,255,.22);}
+.btn-del{padding:6px 12px;border-radius:8px;background:rgba(255,94,122,.1);border:1px solid rgba(255,94,122,.2);color:var(--red);font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;transition:background .2s;}
+.btn-del:hover{background:rgba(255,94,122,.2);}
+.badge-active{background:rgba(0,229,170,.12);color:var(--accent3);border:1px solid rgba(0,229,170,.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+.badge-expired{background:rgba(255,94,122,.1);color:var(--red);border:1px solid rgba(255,94,122,.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+
+/* Login screen */
+#adminLogin{display:none;position:fixed;inset:0;z-index:2500;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+.login-card{background:rgba(15,15,28,.95);border:1px solid var(--gb);border-radius:24px;padding:40px;width:360px;max-width:90vw;text-align:center;}
+.login-logo{font-size:22px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.login-subtitle{font-size:13px;color:var(--text2);margin-bottom:28px;}
+.login-input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--gb);border-radius:12px;padding:13px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;outline:none;margin-bottom:12px;text-align:center;letter-spacing:3px;transition:border-color .2s;}
+.login-input:focus{border-color:rgba(79,140,255,.4);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Sora',sans-serif;box-shadow:0 4px 18px rgba(79,140,255,.3);}
+.login-error{font-size:12px;color:var(--red);margin-top:10px;display:none;}
+
+/* ════ EXISTING SITE STYLES (abbreviated — full styles from v2) ════ */
+.orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.15;animation:orbf 14s ease-in-out infinite;}
+.o1{width:600px;height:600px;background:radial-gradient(circle,#4f8cff,transparent);top:-160px;left:-140px;}
+.o2{width:460px;height:460px;background:radial-gradient(circle,#a259ff,transparent);bottom:60px;right:-100px;animation-duration:12s;animation-delay:-6s;}
+.o3{width:340px;height:340px;background:radial-gradient(circle,#00e5aa,transparent);top:40%;left:52%;animation-duration:18s;animation-delay:-4s;}
+@keyframes orbf{0%,100%{transform:translate(0,0)}33%{transform:translate(28px,-38px)}66%{transform:translate(-18px,28px)}}
+.island-wrap{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1100;}
+.island{background:#050509;border-radius:60px;padding:9px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid rgba(255,255,255,.09);box-shadow:0 4px 36px rgba(0,0,0,.7);min-width:200px;justify-content:center;transition:all .5s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+.island.expanded{padding:14px 32px;border-radius:30px;min-width:440px;max-width:90vw;border-color:rgba(79,140,255,.4);flex-wrap:wrap;gap:8px;background:#0c0c16;box-shadow:0 10px 56px rgba(79,140,255,.25);}
+.island-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);flex-shrink:0;animation:ipulse 2s ease infinite;}
+@keyframes ipulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.island-text{font-size:12.5px;font-weight:600;color:#dde0ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .25s;}
+.island-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
+.island-extras{display:none;width:100%;flex-direction:column;gap:6px;margin-top:4px;}
+.island.expanded .island-extras{display:flex;}
+.island-item{font-size:11.5px;color:var(--text2);display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);}
+.island-close{font-size:11px;color:var(--accent);cursor:pointer;text-align:right;width:100%;padding-top:4px;}
+.hamburger{position:fixed;top:12px;right:16px;z-index:1200;width:40px;height:40px;border-radius:13px;background:rgba(8,8,16,.9);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.13);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:background .2s,border-color .2s;}
+.hamburger:hover{background:rgba(20,20,36,.95);border-color:rgba(79,140,255,.45);}
+.hb-line{width:16px;height:2px;background:rgba(255,255,255,.75);border-radius:2px;transition:transform .3s,opacity .3s,background .3s;}
+.hamburger.open .hb-line:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--accent);}
+.hamburger.open .hb-line:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open .hb-line:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--accent);}
+.hamburger.open{border-color:rgba(79,140,255,.5);background:rgba(10,10,24,.95);}
+.navbar{position:fixed;top:56px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:1120px;z-index:900;background:rgba(12,12,22,.72);backdrop-filter:blur(30px) saturate(200%);border:1px solid var(--gb);border-radius:22px;padding:0 18px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 44px rgba(0,0,0,.45);height:54px;transition:background .3s;}
+.nav-logo{font-size:17px;font-weight:800;flex-shrink:0;white-space:nowrap;cursor:pointer;background:linear-gradient(135deg,#fff 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-logo span{-webkit-text-fill-color:var(--accent);}
+.nav-search{flex:1;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.11);border-radius:12px;padding:7px 14px;min-width:0;transition:border-color .25s,box-shadow .25s;}
+.nav-search:focus-within{border-color:rgba(79,140,255,.45);box-shadow:0 0 0 3px rgba(79,140,255,.12);}
+.ns-icon{font-size:14px;color:var(--text2);flex-shrink:0;}
+.ns-input{flex:1;background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:13px;color:var(--text);caret-color:var(--accent);min-width:0;}
+.ns-input::placeholder{color:var(--text2);}
+.ns-clear{font-size:11px;color:var(--text2);cursor:pointer;width:20px;height:20px;border-radius:5px;display:none;align-items:center;justify-content:center;background:rgba(255,255,255,.08);transition:all .2s;flex-shrink:0;}
+.ns-clear.show{display:flex;}
+.nav-right{display:flex;align-items:center;flex-shrink:0;}
+.nav-cta{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:8px 18px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Sora',sans-serif;box-shadow:0 4px 18px rgba(79,140,255,.3);}
+.drawer{position:fixed;top:0;left:-310px;width:290px;max-width:85vw;height:100vh;z-index:1150;background:rgba(10,10,20,.97);backdrop-filter:blur(32px);border-right:1px solid var(--gb);box-shadow:12px 0 60px rgba(0,0,0,.75);transition:left .38s cubic-bezier(.34,1.1,.64,1);display:flex;flex-direction:column;overflow-y:auto;}
+.drawer.open{left:0;}
+.drawer-head{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.drawer-logo{font-size:15px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.drawer-close{width:30px;height:30px;border-radius:8px;background:var(--glass);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text2);}
+.drawer-nav{flex:1;padding:6px 0;}
+.dnav-item{display:block;padding:16px 24px;font-size:15px;font-weight:500;color:var(--text);cursor:pointer;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s,background .2s,padding-left .2s;position:relative;overflow:hidden;}
+.dnav-item:hover{color:#fff;background:rgba(79,140,255,.08);padding-left:30px;}
+.dnav-item:last-child{border-bottom:none;}
+.drawer-app-btn{margin:16px 20px 28px;padding:14px 20px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;}
+.rh{position:relative;overflow:hidden;}
+.ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none;z-index:10;}
+@keyframes rip{to{transform:scale(4);opacity:0;}}
+.burst{position:fixed;pointer-events:none;z-index:9999;width:70px;height:70px;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:radial-gradient(circle,rgba(79,140,255,.45) 0%,rgba(162,89,255,.15) 50%,transparent 70%);animation:bst .55s ease-out forwards;}
+@keyframes bst{0%{transform:translate(-50%,-50%) scale(0);opacity:1}60%{transform:translate(-50%,-50%) scale(2.8);opacity:.35}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
+.page-overlay{position:fixed;inset:0;z-index:1300;background:var(--bg);overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(24px);}
+.page-overlay.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.page-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 20px;background:rgba(8,8,16,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb);}
+.page-back{width:36px;height:36px;border-radius:11px;background:var(--glass);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text);flex-shrink:0;}
+.page-title{font-size:18px;font-weight:700;color:#fff;flex:1;}
+.page-body{padding:24px 20px 60px;max-width:1120px;margin:0 auto;}
+main{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:130px 16px 80px;}
+.hero{text-align:center;padding:32px 0 44px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.25);border-radius:60px;padding:6px 16px;margin-bottom:18px;font-size:11.5px;font-weight:600;color:var(--accent);animation:fdown .6s ease both;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);animation:ipulse 1.5s ease infinite;}
+.hero h1{font-size:clamp(30px,5vw,56px);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#fff 0%,#c8cfff 45%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px;animation:fdown .7s .1s ease both;}
+.hero p{font-size:15px;color:var(--text2);max-width:500px;margin:0 auto 28px;line-height:1.7;animation:fdown .7s .2s ease both;}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;animation:fdown .7s .25s ease both;}
+.btn-p{background:linear-gradient(135deg,var(--accent),#7b61ff);color:#fff;padding:12px 24px;border-radius:13px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Sora',sans-serif;}
+.btn-g{background:var(--glass);color:var(--text);padding:12px 24px;border-radius:13px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--gb);font-family:'Sora',sans-serif;}
+.hero-quicklinks{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;animation:fdown .7s .32s ease both;}
+.hql{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:60px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;border:1px solid var(--gb);background:var(--glass);color:var(--text2);transition:background .22s,transform .2s;backdrop-filter:blur(8px);}
+.hql:hover{color:#fff;background:var(--glass2);transform:translateY(-2px);}
+.hl-b{border-color:rgba(79,140,255,.3);color:var(--accent);background:rgba(79,140,255,.08);}
+.hl-g{border-color:rgba(0,229,170,.3);color:var(--accent3);background:rgba(0,229,170,.07);}
+.hl-p{border-color:rgba(162,89,255,.3);color:var(--accent2);background:rgba(162,89,255,.07);}
+.hl-go{border-color:rgba(255,209,102,.3);color:var(--gold);background:rgba(255,209,102,.07);}
+.hl-r{border-color:rgba(255,94,122,.3);color:var(--red);background:rgba(255,94,122,.07);}
+.ticker-wrap{background:var(--glass);border:1px solid var(--gb);border-radius:13px;padding:11px 18px;display:flex;align-items:center;gap:14px;margin-bottom:44px;overflow:hidden;backdrop-filter:blur(10px);}
+.ticker-label{font-size:10.5px;font-weight:700;color:#fff;background:var(--red);padding:3px 10px;border-radius:8px;flex-shrink:0;}
+.ticker-track{flex:1;overflow:hidden;}
+.ticker-inner{display:flex;gap:44px;white-space:nowrap;animation:tick 30s linear infinite;font-size:12.5px;color:var(--text2);}
+.ticker-inner span{flex-shrink:0;}
+.ticker-inner span::before{content:'●';color:var(--accent);margin-right:7px;font-size:7px;vertical-align:middle;}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-title{font-size:19px;font-weight:700;color:#fff;display:flex;align-items:center;gap:10px;}
+.sicon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.si-b{background:rgba(79,140,255,.18);}.si-g{background:rgba(0,229,170,.14);}.si-p{background:rgba(162,89,255,.17);}.si-go{background:rgba(255,209,102,.14);}.si-r{background:rgba(255,94,122,.14);}
+.vm{font-size:11.5px;font-weight:600;color:var(--accent);cursor:pointer;padding:6px 13px;border-radius:8px;border:1px solid rgba(79,140,255,.25);background:rgba(79,140,255,.08);transition:background .2s;text-decoration:none;display:inline-block;}
+.gdiv{height:1px;background:linear-gradient(90deg,transparent,var(--gb),transparent);margin:6px 0 40px;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:13px;margin-bottom:44px;}
+.jcard{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:17px 19px;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.2,.64,1),border-color .3s,box-shadow .3s;backdrop-filter:blur(12px);position:relative;overflow:hidden;}
+.jcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,140,255,.05),transparent);opacity:0;transition:opacity .3s;border-radius:inherit;}
+.jcard::after{content:'';position:absolute;top:-50%;left:-60%;width:38%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.065) 50%,transparent 60%);transform:skewX(-15deg);transition:left .48s;pointer-events:none;}
+.jcard:hover{transform:translateY(-4px) scale(1.01);border-color:rgba(79,140,255,.35);box-shadow:0 12px 40px rgba(79,140,255,.12);}
+.jcard:hover::before{opacity:1;}.jcard:hover::after{left:130%;}
+.jcard.admit:hover{border-color:rgba(0,229,170,.35);}
+.ct{display:flex;align-items:flex-start;gap:11px;margin-bottom:9px;}
+.ci{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ctitle{font-size:13.5px;font-weight:600;color:#fff;line-height:1.4;}
+.cmeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
+.tag{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;}
+.tn{background:rgba(0,229,170,.13);color:var(--accent3);border:1px solid rgba(0,229,170,.2);}
+.th{background:rgba(255,94,122,.13);color:var(--red);border:1px solid rgba(255,94,122,.2);}
+.tb{background:rgba(79,140,255,.11);color:var(--accent);border:1px solid rgba(79,140,255,.2);}
+.tg{background:rgba(255,209,102,.11);color:var(--gold);border:1px solid rgba(255,209,102,.2);}
+.tp{background:rgba(162,89,255,.11);color:var(--accent2);border:1px solid rgba(162,89,255,.2);}
+.cfoot{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding-top:11px;border-top:1px solid rgba(255,255,255,.07);}
+.cdate{font-size:11px;color:var(--text2);}
+.carr{width:28px;height:28px;border-radius:9px;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--accent);}
+.jcard:hover .carr{background:var(--accent);color:#fff;}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:44px;}
+.cat-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:18px 14px;text-align:center;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden;}
+.cat-card:hover{transform:translateY(-5px) scale(1.03);}
+.cc-b:hover{border-color:rgba(79,140,255,.4);box-shadow:0 12px 36px rgba(79,140,255,.14);}
+.cc-g:hover{border-color:rgba(0,229,170,.4);}
+.cc-p:hover{border-color:rgba(162,89,255,.4);}
+.cc-r:hover{border-color:rgba(255,94,122,.4);}
+.cc-go:hover{border-color:rgba(255,209,102,.4);}
+.cat-icon{font-size:28px;margin-bottom:8px;display:block;}
+.cat-name{font-size:13px;font-weight:700;color:var(--text);}
+.cat-count{font-size:11px;color:var(--text2);margin-top:3px;}
+.state-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:44px;}
+.state-card{background:var(--glass);border:1px solid var(--gb);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:transform .28s,border-color .28s,box-shadow .28s,background .28s;}
+.state-card:hover{transform:translateY(-5px) scale(1.03);background:var(--glass2);border-color:rgba(0,229,170,.3);}
+.state-animal{font-size:30px;display:block;margin-bottom:8px;}
+.state-name{font-size:13px;font-weight:700;color:var(--text);}
+.state-sub{font-size:10px;color:var(--text2);margin-top:3px;}
+.s-extra{display:none;}.s-extra.s-show{display:block;animation:fup .4s ease both;}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:11px;margin-bottom:44px;}
+.tool-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:20px 14px;text-align:center;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;}
+.tool-card:hover{transform:translateY(-6px) scale(1.04);border-color:rgba(0,229,170,.3);}
+.ti{font-size:30px;margin-bottom:9px;display:block;}.tn2{font-size:13px;font-weight:600;color:var(--text);}.td{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.4;}
+.mtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:11px;margin-bottom:44px;}
+.mt-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:transform .3s,border-color .3s;}
+.mt-card:hover{transform:translateY(-4px);border-color:rgba(162,89,255,.35);}
+.mt-num{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:rgba(162,89,255,.14);color:var(--accent2);border:1px solid rgba(162,89,255,.25);}
+.mt-name{font-size:13px;font-weight:600;color:var(--text);}.mt-count{font-size:11px;color:var(--text2);margin-top:2px;}
+.ebook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px;margin-bottom:44px;}
+.ebook-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:20px;cursor:pointer;transition:transform .3s,border-color .3s;}
+.ebook-card:hover{transform:translateY(-5px);border-color:rgba(255,209,102,.3);}
+.ebook-cover{width:100%;height:130px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;font-size:40px;}
+.ebook-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.ebook-price{font-size:15px;font-weight:800;color:var(--gold);}
+.ebook-old{font-size:11px;color:var(--text2);text-decoration:line-through;margin-left:6px;}
+.ebook-btn{margin-top:12px;width:100%;padding:9px;border-radius:9px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.25);color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:11px;margin-bottom:44px;}
+.scard{border-radius:var(--r);padding:19px 12px;text-align:center;cursor:pointer;transition:transform .3s,background .3s;border:1px solid transparent;}
+.scard:hover{transform:translateY(-5px) scale(1.04);}
+.sw{background:rgba(37,211,102,.09);border-color:rgba(37,211,102,.2);}.sy{background:rgba(255,0,0,.07);border-color:rgba(255,0,0,.14);}.si2{background:rgba(225,48,108,.07);border-color:rgba(225,48,108,.14);}.sfb{background:rgba(66,103,178,.07);border-color:rgba(66,103,178,.14);}.stg{background:rgba(0,136,204,.07);border-color:rgba(0,136,204,.14);}.stw{background:rgba(29,161,242,.07);border-color:rgba(29,161,242,.14);}.sapp{background:rgba(79,140,255,.07);border-color:rgba(79,140,255,.14);}
+.sico{font-size:26px;margin-bottom:7px;display:block;}.sname{font-size:12.5px;font-weight:600;color:var(--text);}
+footer{border-top:1px solid var(--gb);padding:30px 16px;text-align:center;position:relative;z-index:1;}
+.flogo{font-size:20px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.flinks{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.flinks a{font-size:12px;color:var(--text2);text-decoration:none;cursor:pointer;}
+.flinks a:hover{color:var(--accent);}
+.fcopy{font-size:11px;color:var(--text2);}
+.rev{opacity:0;transform:translateY(22px);transition:opacity .55s,transform .55s;}
+.rev.vis{opacity:1;transform:translateY(0);}
+@keyframes fdown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* JOB DETAIL POPUP */
+.jd-overlay{position:fixed;inset:0;z-index:1500;background:rgba(4,4,12,.85);backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.jd-overlay.active{opacity:1;pointer-events:all;}
+.jd-sheet{width:100%;max-width:760px;max-height:92vh;background:#0e0e1c;border:1px solid var(--gb);border-radius:28px 28px 0 0;overflow-y:auto;transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.1,.64,1);}
+.jd-overlay.active .jd-sheet{transform:translateY(0);}
+.jd-handle{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.18);margin:14px auto 0;}
+.jd-header{padding:20px 24px 0;}
+.jd-org-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.jd-org-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:rgba(79,140,255,.15);border:1px solid rgba(79,140,255,.2);}
+.jd-org-name{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:2px;}
+.jd-title{font-size:17px;font-weight:700;color:#fff;line-height:1.35;}
+.jd-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.jd-tag{font-size:11px;font-weight:600;padding:4px 11px;border-radius:8px;}
+.jd-tag-hot{background:rgba(255,94,122,.14);color:var(--red);border:1px solid rgba(255,94,122,.25);}
+.jd-tag-new{background:rgba(0,229,170,.13);color:var(--accent3);border:1px solid rgba(0,229,170,.22);}
+.jd-tag-blue{background:rgba(79,140,255,.13);color:var(--accent);border:1px solid rgba(79,140,255,.22);}
+.jd-tag-gold{background:rgba(255,209,102,.12);color:var(--gold);border:1px solid rgba(255,209,102,.22);}
+.jd-tag-purple{background:rgba(162,89,255,.12);color:var(--accent2);border:1px solid rgba(162,89,255,.22);}
+.jd-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:18px 24px;}
+.jd-strip-item{background:rgba(255,255,255,.04);border:1px solid var(--gb);border-radius:12px;padding:12px 14px;text-align:center;}
+.jd-strip-label{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.jd-strip-val{font-size:13px;font-weight:700;color:#fff;}
+.jd-strip-val.red{color:var(--red);}.jd-strip-val.green{color:var(--accent3);}.jd-strip-val.gold{color:var(--gold);}
+.jd-sec-heading{display:flex;align-items:center;background:linear-gradient(135deg,#c0392b,#e74c3c);border-radius:11px;padding:12px 18px;margin:0 24px 14px;font-size:14px;font-weight:700;color:#fff;gap:8px;}
+.jd-table{width:calc(100% - 48px);margin:0 24px 20px;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--gb);}
+.jd-table tr{border-bottom:1px solid rgba(255,255,255,.06);}
+.jd-table tr:last-child{border-bottom:none;}
+.jd-table td{padding:11px 16px;font-size:13px;vertical-align:top;}
+.jd-table td:first-child{color:var(--text2);font-weight:600;width:42%;background:rgba(255,255,255,.02);}
+.jd-table td:last-child{color:var(--text);}
+.jd-vac-table{width:calc(100% - 48px);margin:0 24px 20px;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--gb);}
+.jd-vac-table th{background:rgba(79,140,255,.15);color:var(--accent);font-size:12px;font-weight:700;padding:10px 14px;text-align:left;border-bottom:1px solid rgba(79,140,255,.2);}
+.jd-vac-table td{padding:10px 14px;font-size:13px;color:var(--text);border-bottom:1px solid rgba(255,255,255,.05);}
+.jd-vac-table tr:last-child td{border-bottom:none;}
+.jd-vac-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.jd-links-table{width:calc(100% - 48px);margin:0 24px 20px;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--gb);}
+.jd-links-table tr{border-bottom:1px solid rgba(255,255,255,.06);}
+.jd-links-table tr:last-child{border-bottom:none;}
+.jd-links-table td{padding:14px 18px;font-size:13.5px;vertical-align:middle;}
+.jd-links-table td:first-child{color:var(--text);font-weight:500;width:60%;}
+.jd-links-table td:last-child{text-align:right;}
+.jd-click-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#e74c3c;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background .2s;font-family:'Sora',sans-serif;}
+.jd-click-btn:hover{background:rgba(231,76,60,.22);}
+.jd-faq{margin:0 24px 20px;}
+.jd-faq-item{border:1px solid var(--gb);border-radius:12px;margin-bottom:8px;overflow:hidden;}
+.jd-faq-q{padding:14px 16px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.jd-faq-q:hover{background:rgba(255,255,255,.04);}
+.faq-arrow{font-size:12px;color:var(--text2);transition:transform .25s;flex-shrink:0;}
+.jd-faq-item.open .faq-arrow{transform:rotate(180deg);}
+.jd-faq-a{display:none;padding:0 16px 14px;font-size:13px;color:var(--text2);line-height:1.65;}
+.jd-faq-item.open .jd-faq-a{display:block;}
+.jd-apply-row{padding:20px 24px 32px;display:flex;gap:12px;flex-wrap:wrap;}
+.jd-apply-btn{flex:1;min-width:200px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;padding:15px 24px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:'Sora',sans-serif;text-align:center;}
+.jd-notif-btn{flex:1;min-width:160px;background:var(--glass);border:1px solid var(--gb);color:var(--text);padding:15px 24px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;text-align:center;}
+.jd-close-row{display:flex;justify-content:flex-end;padding:12px 20px 0;}
+.jd-close{width:32px;height:32px;border-radius:9px;background:var(--glass);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text2);}
+.jd-close:hover{background:rgba(255,94,122,.15);color:var(--red);}
+@media(max-width:600px){.state-grid{grid-template-columns:repeat(2,1fr);}.cgrid{grid-template-columns:1fr;}.cat-grid{grid-template-columns:repeat(2,1fr);}.mtgrid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ════════ SUPABASE CONFIG — EDIT THESE TWO LINES ════════ -->
+<script>
+const SUPABASE_URL = 'https://bneaqiaudtvoapsjanbl.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuZWFxaWF1ZHR2b2Fwc2phbmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1NTAxMDQsImV4cCI6MjA4OTEyNjEwNH0.c8mV140WYkG01XYpMgiwUNRi2P8BGTHWotJgH9quVME';
+const ADMIN_PASSWORD = 'Krishna@8135';
+
+// ── SUPABASE CLIENT ──
+const db = {
+  async get(table, extra = '') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?is_active=eq.true&order=created_at.desc${extra}`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return r.json();
+  },
+  async getAll(table) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?order=created_at.desc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return r.json();
+  },
+  async getById(table, id) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const d = await r.json(); return d[0];
+  },
+  async getVacancies(jobId) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/vacancies?job_id=eq.${jobId}`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return r.json();
+  },
+  async post(table, data) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async patch(table, id, data) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(data)
+    });
+    return r.json();
+  },
+  async del(table, id) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return r.ok;
+  },
+  async rpc(fn) {
+    await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+      body: '{}'
+    });
+  }
+};
+</script>
+
+<!-- ORBS -->
+<div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ISLAND -->
+<div class="island-wrap">
+  <div class="island rh" id="island" onclick="toggleIsland(event)">
+    <div class="island-dot"></div>
+    <div class="island-text" id="island-text">🔴 Loading latest updates...</div>
+    <div class="island-badge" id="island-badge">...</div>
+    <div class="island-extras" id="island-extras">
+      <div id="island-list"></div>
+      <div class="island-close" onclick="closeIsland(event)">✕ Close</div>
+    </div>
+  </div>
+</div>
+
+<!-- HAMBURGER -->
+<div class="hamburger" id="hamburger" onclick="toggleDrawer()">
+  <div class="hb-line"></div><div class="hb-line"></div><div class="hb-line"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo rh" onclick="goHome(event)">Rank<span>Sarathi</span></div>
+  <div class="nav-search">
+    <span class="ns-icon">🔍</span>
+    <input class="ns-input" id="nsInput" type="text" placeholder="Search jobs, results, admit cards..." oninput="handleSearch(this)">
+    <div class="ns-clear" id="nsClear" onclick="clearSearch()">✕</div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-cta rh" onclick="ripple(event)">📱 App</button>
+  </div>
+</nav>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-logo">RankSarathi</div>
+    <div class="drawer-close rh" onclick="closeDrawer()">✕</div>
+  </div>
+  <div class="drawer-nav">
+    <a class="dnav-item rh" onclick="openPage('admissions');closeDrawer()">Admissions</a>
+    <a class="dnav-item rh" onclick="openPage('admitcards');closeDrawer()">Admit Cards</a>
+    <a class="dnav-item rh" onclick="openPage('jobs');closeDrawer()">Jobs</a>
+    <a class="dnav-item rh" onclick="openPage('results');closeDrawer()">Results</a>
+    <a class="dnav-item rh" onclick="openPage('schemes');closeDrawer()">Schemes</a>
+    <a class="dnav-item rh" onclick="openPage('scholarships');closeDrawer()">Scholarships</a>
+    <a class="dnav-item rh" onclick="openPage('submitjob');closeDrawer()">Submit Job</a>
+  </div>
+  <div class="drawer-app-btn rh" onclick="ripple(event)"><span>▷</span> Android App</div>
+</div>
+
+<!-- FULLSCREEN PAGES (Jobs, Results, Admit Cards) -->
+<div class="page-overlay" id="page-jobs">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('jobs')">←</div><div class="page-title">💼 Government Jobs</div></div>
+  <div class="page-body"><div class="cgrid" id="jobs-page-grid"><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-results">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('results')">←</div><div class="page-title">🏆 Exam Results</div></div>
+  <div class="page-body"><div class="cgrid" id="results-page-grid"><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-admitcards">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('admitcards')">←</div><div class="page-title">📋 Admit Cards</div></div>
+  <div class="page-body"><div class="cgrid" id="admitcards-page-grid"><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-admissions">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('admissions')">←</div><div class="page-title">🎓 Admissions</div></div>
+  <div class="page-body"><div class="cgrid" id="admissions-page-grid"><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-schemes">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('schemes')">←</div><div class="page-title">🌿 Govt Schemes</div></div>
+  <div class="page-body"><div class="cgrid" id="schemes-page-grid"><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-scholarships">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('scholarships')">←</div><div class="page-title">🏅 Scholarships</div></div>
+  <div class="page-body"><div class="cgrid" id="scholarships-page-grid"><div class="skeleton skel-card"></div></div></div>
+</div>
+<div class="page-overlay" id="page-submitjob">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('submitjob')">←</div><div class="page-title">✉️ Submit a Job</div></div>
+  <div class="page-body">
+    <div style="max-width:560px;margin:0 auto;background:var(--glass);border:1px solid var(--gb);border-radius:22px;padding:32px;">
+      <p style="color:var(--text2);font-size:14px;margin-bottom:24px;line-height:1.7;">Have a recruitment notification? Submit it below.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <input id="sj-title" type="text" placeholder="Job Title" style="background:rgba(255,255,255,.07);border:1px solid var(--gb);border-radius:11px;padding:12px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;">
+        <input id="sj-org" type="text" placeholder="Organization Name" style="background:rgba(255,255,255,.07);border:1px solid var(--gb);border-radius:11px;padding:12px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;">
+        <input id="sj-posts" type="text" placeholder="Number of Posts" style="background:rgba(255,255,255,.07);border:1px solid var(--gb);border-radius:11px;padding:12px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;">
+        <input id="sj-date" type="date" style="background:rgba(255,255,255,.07);border:1px solid var(--gb);border-radius:11px;padding:12px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;">
+        <input id="sj-link" type="url" placeholder="Official Notification Link" style="background:rgba(255,255,255,.07);border:1px solid var(--gb);border-radius:11px;padding:12px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;">
+        <button onclick="submitJobForm()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:14px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Sora',sans-serif;">Submit Notification</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-overlay" id="page-category">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('category')">←</div><div class="page-title">🗂️ Category-wise Jobs</div></div>
+  <div class="page-body">
+    <div class="cat-grid">
+      <div class="cat-card cc-b rh" onclick="ripple(event)"><span class="cat-icon">🏛️</span><div class="cat-name">Govt / PSU</div><div class="cat-count">148 Jobs</div></div>
+      <div class="cat-card cc-r rh" onclick="ripple(event)"><span class="cat-icon">🚔</span><div class="cat-name">Police / Defence</div><div class="cat-count">62 Jobs</div></div>
+      <div class="cat-card cc-g rh" onclick="ripple(event)"><span class="cat-icon">🏥</span><div class="cat-name">Medical / Health</div><div class="cat-count">39 Jobs</div></div>
+      <div class="cat-card cc-p rh" onclick="ripple(event)"><span class="cat-icon">🎓</span><div class="cat-name">Teaching</div><div class="cat-count">87 Jobs</div></div>
+      <div class="cat-card cc-go rh" onclick="ripple(event)"><span class="cat-icon">🏦</span><div class="cat-name">Banking</div><div class="cat-count">24 Jobs</div></div>
+      <div class="cat-card cc-b rh" onclick="ripple(event)"><span class="cat-icon">⚙️</span><div class="cat-name">Engineering</div><div class="cat-count">31 Jobs</div></div>
+      <div class="cat-card cc-g rh" onclick="ripple(event)"><span class="cat-icon">🌿</span><div class="cat-name">Forest / Agriculture</div><div class="cat-count">18 Jobs</div></div>
+      <div class="cat-card cc-p rh" onclick="ripple(event)"><span class="cat-icon">📊</span><div class="cat-name">Clerk / Admin</div><div class="cat-count">54 Jobs</div></div>
+      <div class="cat-card cc-r rh" onclick="ripple(event)"><span class="cat-icon">⚖️</span><div class="cat-name">Judiciary</div><div class="cat-count">12 Jobs</div></div>
+      <div class="cat-card cc-go rh" onclick="ripple(event)"><span class="cat-icon">🚆</span><div class="cat-name">Railways</div><div class="cat-count">45 Jobs</div></div>
+    </div>
+  </div>
+</div>
+<div class="page-overlay" id="page-tools">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('tools')">←</div><div class="page-title">🛠️ Free Tools</div></div>
+  <div class="page-body">
+    <div class="tgrid">
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">📄</span><div class="tn2">Bio-Data Maker</div><div class="td">Create resume instantly</div></div>
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">🖼️</span><div class="tn2">Image Resizer</div><div class="td">Passport &amp; ID size</div></div>
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">📷</span><div class="tn2">Image to PDF</div><div class="td">Convert photos to PDF</div></div>
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">📅</span><div class="tn2">Age Calculator</div><div class="td">Check eligibility fast</div></div>
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">🤝</span><div class="tn2">Combine Images</div><div class="td">Merge two photos</div></div>
+      <div class="tool-card rh" onclick="ripple(event)"><span class="ti">📱</span><div class="tn2">UPI QR Generator</div><div class="td">Generate QR code</div></div>
+    </div>
+  </div>
+</div>
+<div class="page-overlay" id="page-mocktests">
+  <div class="page-header"><div class="page-back rh" onclick="closePage('mocktests')">←</div><div class="page-title">📝 Mock Tests</div></div>
+  <div class="page-body">
+    <div class="mtgrid">
+      <div class="mt-card rh" onclick="ripple(event)"><div class="mt-num">①</div><div><div class="mt-name">Assam Direct Recruitment</div><div class="mt-count">120+ Tests</div></div></div>
+      <div class="mt-card rh" onclick="ripple(event)"><div class="mt-num">②</div><div><div class="mt-name">Assam Police</div><div class="mt-count">80+ Tests</div></div></div>
+      <div class="mt-card rh" onclick="ripple(event)"><div class="mt-num">③</div><div><div class="mt-name">General Knowledge</div><div class="mt-count">200+ Qs</div></div></div>
+      <div class="mt-card rh" onclick="ripple(event)"><div class="mt-num">④</div><div><div class="mt-name">Current Affairs</div><div class="mt-count">Daily</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- JOB DETAIL POPUP -->
+<div class="jd-overlay" id="jdOverlay" onclick="handleJdClick(event)">
+  <div class="jd-sheet" id="jdSheet">
+    <div class="jd-handle"></div>
+    <div class="jd-close-row"><div class="jd-close" onclick="closeJobDetail()">✕</div></div>
+    <div id="jdContent"></div>
+  </div>
+</div>
+
+<!-- ════════════════ ADMIN LOGIN ════════════════ -->
+<div id="adminLogin" style="display:none;position:fixed;inset:0;z-index:2500;background:var(--bg);align-items:center;justify-content:center;">
+  <div class="login-card">
+    <div class="login-logo">RankSarathi Admin</div>
+    <div class="login-subtitle">Enter your admin password to continue</div>
+    <input class="login-input" type="password" id="loginPwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="loginError">Wrong password. Try again.</div>
+  </div>
+</div>
+
+<!-- ════════════════ ADMIN PANEL ════════════════ -->
+<div id="adminPanel">
+  <div class="admin-nav">
+    <div class="admin-logo">RankSarathi</div>
+    <div class="admin-badge">ADMIN</div>
+    <div class="admin-nav-right">
+      <button class="admin-tab active" onclick="switchAdminTab('dashboard',this)">📊 Dashboard</button>
+      <button class="admin-tab" onclick="switchAdminTab('add-job',this)">➕ Add Job</button>
+      <button class="admin-tab" onclick="switchAdminTab('manage-jobs',this)">📋 Manage Jobs</button>
+      <button class="admin-tab" onclick="switchAdminTab('add-result',this)">🏆 Add Result</button>
+      <button class="admin-tab" onclick="switchAdminTab('add-admit',this)">📋 Add Admit Card</button>
+      <div class="admin-close" onclick="closeAdmin()">✕</div>
+    </div>
+  </div>
+  <div class="admin-body">
+
+    <!-- DASHBOARD -->
+    <div class="admin-section active" id="tab-dashboard">
+      <div class="admin-stats" id="admin-stats">
+        <div class="astat blue"><div class="astat-val" id="stat-jobs">—</div><div class="astat-label">Active Jobs</div></div>
+        <div class="astat green"><div class="astat-val" id="stat-results">—</div><div class="astat-label">Results</div></div>
+        <div class="astat red"><div class="astat-val" id="stat-admits">—</div><div class="astat-label">Admit Cards</div></div>
+        <div class="astat gold"><div class="astat-val" id="stat-expired">—</div><div class="astat-label">Expired Jobs</div></div>
+      </div>
+      <div class="admin-form-card">
+        <div class="admin-form-title">⚡ Quick Actions</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-save" onclick="switchAdminTab('add-job',null)">➕ Add New Job</button>
+          <button class="btn-save" onclick="switchAdminTab('add-result',null)">🏆 Add Result</button>
+          <button class="btn-save" onclick="switchAdminTab('add-admit',null)">📋 Add Admit Card</button>
+          <button class="btn-danger" onclick="deleteExpiredJobs()">🗑️ Delete All Expired Jobs</button>
+        </div>
+      </div>
+      <div id="recent-jobs-admin"></div>
+    </div>
+
+    <!-- ADD JOB -->
+    <div class="admin-section" id="tab-add-job">
+      <div class="admin-form-card">
+        <div class="admin-form-title">➕ Add New Job</div>
+        <div class="form-grid">
+          <div class="form-group full"><div class="form-label">Job Title *</div><input class="form-input" id="f-title" placeholder="e.g. PNRD Recruitment 2026 – 1508 Posts"></div>
+          <div class="form-group"><div class="form-label">Organization *</div><input class="form-input" id="f-org" placeholder="e.g. Panchayat & Rural Dev, Assam"></div>
+          <div class="form-group"><div class="form-label">Icon (emoji)</div><input class="form-input" id="f-icon" placeholder="🏛️" value="🏛️"></div>
+          <div class="form-group"><div class="form-label">Category</div>
+            <select class="form-select" id="f-category">
+              <option>State Govt</option><option>Central Govt</option><option>Defence</option>
+              <option>Banking</option><option>Teaching</option><option>Medical</option>
+              <option>Railways</option><option>Police</option><option>Forest</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><div class="form-label">State</div>
+            <select class="form-select" id="f-state">
+              <option>Assam</option><option>All India</option><option>Meghalaya</option>
+              <option>Arunachal Pradesh</option><option>Manipur</option><option>Nagaland</option>
+              <option>Mizoram</option><option>Tripura</option><option>Sikkim</option>
+            </select>
+          </div>
+          <div class="form-group"><div class="form-label">Total Posts</div><input class="form-input" id="f-posts" placeholder="e.g. 1508"></div>
+          <div class="form-group"><div class="form-label">Qualification</div><input class="form-input" id="f-qual" placeholder="e.g. Class X / XII / Graduation"></div>
+          <div class="form-group"><div class="form-label">Age Limit</div><input class="form-input" id="f-age" placeholder="e.g. 18 – 43 Years"></div>
+          <div class="form-group"><div class="form-label">Application Fee</div><input class="form-input" id="f-fee" placeholder="e.g. Nil or ₹250" value="Nil"></div>
+          <div class="form-group"><div class="form-label">Apply Start Date</div><input class="form-input" id="f-start" type="date"></div>
+          <div class="form-group"><div class="form-label">Last Date *</div><input class="form-input" id="f-lastdate" type="date"></div>
+          <div class="form-group"><div class="form-label">Salary</div><input class="form-input" id="f-salary" placeholder="e.g. ₹14,000 – ₹60,500"></div>
+          <div class="form-group"><div class="form-label">Selection Process</div><input class="form-input" id="f-selection" placeholder="e.g. Written Test + Interview"></div>
+          <div class="form-group"><div class="form-label">Official Website</div><input class="form-input" id="f-website" placeholder="e.g. pnrdassam.gov.in"></div>
+          <div class="form-group"><div class="form-label">Apply Link</div><input class="form-input" id="f-applylink" placeholder="Full URL to apply form" type="url"></div>
+          <div class="form-group"><div class="form-label">Notification PDF Link</div><input class="form-input" id="f-notiflink" placeholder="Full URL to notification PDF" type="url"></div>
+          <div class="form-group full"><div class="form-label">Age Relaxation</div><input class="form-input" id="f-agerelax" placeholder="e.g. 5 Yrs SC/ST, 3 Yrs OBC/MOBC"></div>
+          <div class="form-group full"><div class="form-label">Tags (comma separated)</div><input class="form-input" id="f-tags" placeholder="e.g. NEW,HOT"></div>
+          <div class="form-group full" style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+            <input type="checkbox" id="f-hot" style="width:18px;height:18px;cursor:pointer;">
+            <label for="f-hot" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;">🔥 Mark as HOT / Featured</label>
+          </div>
+        </div>
+
+        <!-- VACANCY TABLE BUILDER -->
+        <div style="margin-top:20px;">
+          <div class="admin-form-title" style="font-size:14px;margin-bottom:12px;">📊 Vacancy Details (optional)</div>
+          <div id="vacancy-rows">
+            <div class="vacancy-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:center;">
+              <input class="form-input vac-cat" placeholder="Category (e.g. UR)">
+              <input class="form-input vac-posts" placeholder="Posts" type="number">
+              <input class="form-input vac-qual" placeholder="Qualification">
+              <button onclick="removeVacRow(this)" style="background:rgba(255,94,122,.1);border:1px solid rgba(255,94,122,.2);color:var(--red);padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;">✕</button>
+            </div>
+          </div>
+          <button onclick="addVacRow()" style="background:var(--glass);border:1px solid var(--gb);color:var(--text2);padding:9px 18px;border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:600;font-family:'Sora',sans-serif;">+ Add Row</button>
+        </div>
+
+        <!-- FAQ BUILDER -->
+        <div style="margin-top:20px;">
+          <div class="admin-form-title" style="font-size:14px;margin-bottom:12px;">❓ FAQs (optional)</div>
+          <div id="faq-rows">
+            <div class="faq-row" style="margin-bottom:10px;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.03);padding:12px;border-radius:11px;border:1px solid var(--gb);">
+              <input class="form-input faq-q" placeholder="FAQ Question">
+              <textarea class="form-textarea faq-a" placeholder="FAQ Answer" rows="2"></textarea>
+            </div>
+          </div>
+          <button onclick="addFaqRow()" style="background:var(--glass);border:1px solid var(--gb);color:var(--text2);padding:9px 18px;border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:600;font-family:'Sora',sans-serif;">+ Add FAQ</button>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-save rh" onclick="saveJob();ripple(event)">💾 Save Job</button>
+          <button class="btn-cancel" onclick="clearJobForm()">Clear Form</button>
+        </div>
+        <div id="save-status" style="margin-top:10px;font-size:13px;color:var(--accent3);display:none;"></div>
+      </div>
+    </div>
+
+    <!-- MANAGE JOBS -->
+    <div class="admin-section" id="tab-manage-jobs">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:18px;font-weight:700;color:#fff;">All Jobs</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="loadAdminJobs()" style="background:var(--glass);border:1px solid var(--gb);color:var(--text);padding:8px 16px;border-radius:9px;cursor:pointer;font-size:12.5px;font-family:'Sora',sans-serif;">🔄 Refresh</button>
+          <button class="btn-danger" onclick="deleteExpiredJobs()">🗑️ Delete Expired</button>
+        </div>
+      </div>
+      <div class="admin-list" id="admin-jobs-list">
+        <div class="skeleton" style="height:70px;border-radius:14px;"></div>
+        <div class="skeleton" style="height:70px;border-radius:14px;margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- ADD RESULT -->
+    <div class="admin-section" id="tab-add-result">
+      <div class="admin-form-card">
+        <div class="admin-form-title">🏆 Add Exam Result</div>
+        <div class="form-grid">
+          <div class="form-group full"><div class="form-label">Result Title *</div><input class="form-input" id="r-title" placeholder="e.g. DEE Assam Merit List 2026 – 4500 Teachers"></div>
+          <div class="form-group"><div class="form-label">Organization</div><input class="form-input" id="r-org" placeholder="e.g. DEE Assam"></div>
+          <div class="form-group"><div class="form-label">Icon (emoji)</div><input class="form-input" id="r-icon" placeholder="🏆" value="🏆"></div>
+          <div class="form-group"><div class="form-label">Release Date</div><input class="form-input" id="r-date" type="date"></div>
+          <div class="form-group full"><div class="form-label">Result Link</div><input class="form-input" id="r-link" placeholder="Full URL to result" type="url"></div>
+        </div>
+        <div class="form-actions"><button class="btn-save rh" onclick="saveResult();ripple(event)">💾 Save Result</button></div>
+      </div>
+    </div>
+
+    <!-- ADD ADMIT CARD -->
+    <div class="admin-section" id="tab-add-admit">
+      <div class="admin-form-card">
+        <div class="admin-form-title">📋 Add Admit Card</div>
+        <div class="form-grid">
+          <div class="form-group full"><div class="form-label">Admit Card Title *</div><input class="form-input" id="a-title" placeholder="e.g. Assam Police PST/PET Admit Card 2026"></div>
+          <div class="form-group"><div class="form-label">Organization</div><input class="form-input" id="a-org" placeholder="e.g. SLPRB Assam"></div>
+          <div class="form-group"><div class="form-label">Icon (emoji)</div><input class="form-input" id="a-icon" placeholder="📋" value="📋"></div>
+          <div class="form-group"><div class="form-label">Exam Date</div><input class="form-input" id="a-examdate" placeholder="e.g. Apr 2026 or 15 Apr 2026"></div>
+          <div class="form-group full"><div class="form-label">Download Link</div><input class="form-input" id="a-link" placeholder="Full URL to admit card" type="url"></div>
+        </div>
+        <div class="form-actions"><button class="btn-save rh" onclick="saveAdmitCard();ripple(event)">💾 Save Admit Card</button></div>
+      </div>
+    </div>
+
+  </div><!-- admin-body -->
+</div><!-- adminPanel -->
+
+<!-- MAIN HOME -->
+<main>
+  <section class="hero">
+    <div class="hero-badge"><span class="live-dot"></span> Live · All India</div>
+    <h1>Your Rank.<br>Your Future. ✦</h1>
+    <p>Govt jobs, results, admit cards &amp; free tools — all in one beautifully crafted portal for India's job seekers.</p>
+    <div class="hero-actions">
+      <button class="btn-p rh" onclick="openPage('jobs');ripple(event)">🔍 Browse Jobs</button>
+      <button class="btn-g rh" onclick="openPage('tools');ripple(event)">🛠️ Free Tools</button>
+    </div>
+    <div class="hero-quicklinks">
+      <a class="hql hl-b rh" onclick="openPage('category');ripple(event)">🗂️ Category-wise</a>
+      <a class="hql hl-g rh" onclick="scrollToSec('state-sec');ripple(event)">🗺️ State-wise</a>
+      <a class="hql hl-r rh" onclick="openPage('admitcards');ripple(event)">📋 Admit Cards</a>
+      <a class="hql hl-p rh" onclick="openPage('mocktests');ripple(event)">📝 Mock Tests</a>
+      <a class="hql hl-go rh" onclick="scrollToSec('ebooks-sec');ripple(event)">📚 eBooks</a>
+    </div>
+  </section>
+
+  <!-- TICKER — Live from DB -->
+  <div class="ticker-wrap rev">
+    <div class="ticker-label">LIVE</div>
+    <div class="ticker-track"><div class="ticker-inner" id="ticker-inner">
+      <span>Loading latest updates...</span><span>Loading latest updates...</span>
+    </div></div>
+  </div>
+
+  <!-- CATEGORY-WISE -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-b">🗂️</div> Category-wise Jobs</div><a class="vm rh" onclick="openPage('category');ripple(event)">View All →</a></div>
+    <div class="cat-grid">
+      <div class="cat-card cc-b rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🏛️</span><div class="cat-name">Govt / PSU</div><div class="cat-count" id="cnt-govt">— Jobs</div></div>
+      <div class="cat-card cc-r rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🚔</span><div class="cat-name">Police / Defence</div><div class="cat-count" id="cnt-police">— Jobs</div></div>
+      <div class="cat-card cc-g rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🏥</span><div class="cat-name">Medical / Health</div><div class="cat-count" id="cnt-medical">— Jobs</div></div>
+      <div class="cat-card cc-p rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🎓</span><div class="cat-name">Teaching</div><div class="cat-count" id="cnt-teaching">— Jobs</div></div>
+      <div class="cat-card cc-go rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🏦</span><div class="cat-name">Banking</div><div class="cat-count" id="cnt-banking">— Jobs</div></div>
+      <div class="cat-card cc-b rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">⚙️</span><div class="cat-name">Engineering</div><div class="cat-count" id="cnt-engineering">— Jobs</div></div>
+      <div class="cat-card cc-g rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">🌿</span><div class="cat-name">Forest / Agri</div><div class="cat-count" id="cnt-forest">— Jobs</div></div>
+      <div class="cat-card cc-p rh" onclick="openPage('category');ripple(event)"><span class="cat-icon">📊</span><div class="cat-name">Clerk / Admin</div><div class="cat-count" id="cnt-clerk">— Jobs</div></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- STATE-WISE -->
+  <div class="rev" id="state-sec">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-g">🗺️</div> State-wise Jobs</div><a class="vm rh" id="stateBtn" onclick="toggleStates();ripple(event)">View All →</a></div>
+    <div class="state-grid" id="stateGrid">
+      <div class="state-card rh" onclick="ripple(event)"><span class="state-animal">🦏</span><div class="state-name">Assam</div><div class="state-sub">One-Horned Rhino</div></div>
+      <div class="state-card rh" onclick="ripple(event)"><span class="state-animal">🐆</span><div class="state-name">Meghalaya</div><div class="state-sub">Clouded Leopard</div></div>
+      <div class="state-card rh" onclick="ripple(event)"><span class="state-animal">🐃</span><div class="state-name">Arunachal</div><div class="state-sub">Gayal (Mithun)</div></div>
+      <div class="state-card rh" onclick="ripple(event)"><span class="state-animal">🦌</span><div class="state-name">Manipur</div><div class="state-sub">Sangai Deer</div></div>
+      <div class="state-card rh s-extra" onclick="ripple(event)"><span class="state-animal">🐃</span><div class="state-name">Nagaland</div><div class="state-sub">Mithun</div></div>
+      <div class="state-card rh s-extra" onclick="ripple(event)"><span class="state-animal">🦬</span><div class="state-name">Mizoram</div><div class="state-sub">Serow</div></div>
+      <div class="state-card rh s-extra" onclick="ripple(event)"><span class="state-animal">🐒</span><div class="state-name">Tripura</div><div class="state-sub">Phayre's Langur</div></div>
+      <div class="state-card rh s-extra" onclick="ripple(event)"><span class="state-animal">❄️</span><div class="state-name">Sikkim</div><div class="state-sub">Snow Leopard</div></div>
+      <div class="state-card rh s-extra" onclick="ripple(event)"><span class="state-animal">🦁</span><div class="state-name">Central Govt</div><div class="state-sub">All India</div></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- LATEST JOBS — Live from DB -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-b">💼</div> Latest Job Updates</div><a class="vm rh" onclick="openPage('jobs');ripple(event)">View All →</a></div>
+    <div class="cgrid" id="home-jobs-grid">
+      <div class="skeleton skel-card"></div><div class="skeleton skel-card"></div><div class="skeleton skel-card"></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- RESULTS — Live from DB -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-g">🏆</div> Exam Results</div><a class="vm rh" onclick="openPage('results');ripple(event)">View All →</a></div>
+    <div class="cgrid" id="home-results-grid">
+      <div class="skeleton skel-card"></div><div class="skeleton skel-card"></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- ADMIT CARDS — Live from DB -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-r">📋</div> Admit Cards</div><a class="vm rh" onclick="openPage('admitcards');ripple(event)">View All →</a></div>
+    <div class="cgrid" id="home-admits-grid">
+      <div class="skeleton skel-card"></div><div class="skeleton skel-card"></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- TOOLS -->
+  <div class="rev" id="tools-sec">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-g">🛠️</div> Free Online Tools</div><a class="vm rh" onclick="openPage('tools');ripple(event)">View All →</a></div>
+    <div class="tgrid">
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">📄</span><div class="tn2">Bio-Data Maker</div><div class="td">Create resume instantly</div></div>
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">🖼️</span><div class="tn2">Image Resizer</div><div class="td">Passport &amp; ID size</div></div>
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">📷</span><div class="tn2">Image to PDF</div><div class="td">Photos to PDF</div></div>
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">📅</span><div class="tn2">Age Calculator</div><div class="td">Check eligibility</div></div>
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">🤝</span><div class="tn2">Combine Images</div><div class="td">Merge photos</div></div>
+      <div class="tool-card rh" onclick="openPage('tools');ripple(event)"><span class="ti">📱</span><div class="tn2">UPI QR Generator</div><div class="td">Generate QR code</div></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- MOCK TESTS -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-p">📝</div> Online Mock Tests</div><a class="vm rh" onclick="openPage('mocktests');ripple(event)">View All →</a></div>
+    <div class="mtgrid">
+      <div class="mt-card rh" onclick="openPage('mocktests');ripple(event)"><div class="mt-num">①</div><div><div class="mt-name">Assam Direct Recruitment</div><div class="mt-count">120+ Tests</div></div></div>
+      <div class="mt-card rh" onclick="openPage('mocktests');ripple(event)"><div class="mt-num">②</div><div><div class="mt-name">Assam Police</div><div class="mt-count">80+ Tests</div></div></div>
+      <div class="mt-card rh" onclick="openPage('mocktests');ripple(event)"><div class="mt-num">③</div><div><div class="mt-name">General Knowledge</div><div class="mt-count">200+ Qs</div></div></div>
+      <div class="mt-card rh" onclick="openPage('mocktests');ripple(event)"><div class="mt-num">④</div><div><div class="mt-name">Current Affairs</div><div class="mt-count">Daily</div></div></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- EBOOKS -->
+  <div class="rev" id="ebooks-sec">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-go">📚</div> Our eBooks</div><a class="vm rh" onclick="ripple(event)">View All →</a></div>
+    <div class="ebook-grid">
+      <div class="ebook-card rh" onclick="ripple(event)"><div class="ebook-cover" style="background:rgba(255,94,122,.1)">📘</div><div class="ebook-title">Assam Police Exam eBook</div><div><span class="ebook-price">₹49</span><span class="ebook-old">₹199</span></div><button class="ebook-btn">Buy Now →</button></div>
+      <div class="ebook-card rh" onclick="ripple(event)"><div class="ebook-cover" style="background:rgba(79,140,255,.1)">📗</div><div class="ebook-title">Assam Direct Recruitment eBook</div><div><span class="ebook-price">₹99</span><span class="ebook-old">₹349</span></div><button class="ebook-btn">Buy Now →</button></div>
+      <div class="ebook-card rh" onclick="ripple(event)"><div class="ebook-cover" style="background:rgba(0,229,170,.1)">📕</div><div class="ebook-title">Assam Health Dept eBook</div><div><span class="ebook-price">₹69</span><span class="ebook-old">₹249</span></div><button class="ebook-btn">Buy Now →</button></div>
+      <div class="ebook-card rh" onclick="ripple(event)"><div class="ebook-cover" style="background:rgba(162,89,255,.1)">📙</div><div class="ebook-title">SSC GD Constable eBook</div><div><span class="ebook-price">₹49</span><span class="ebook-old">₹199</span></div><button class="ebook-btn">Buy Now →</button></div>
+    </div>
+  </div>
+  <div class="gdiv"></div>
+
+  <!-- SOCIAL -->
+  <div class="rev">
+    <div class="sec-head"><div class="sec-title"><div class="sicon si-b">🌐</div> Follow &amp; Connect</div></div>
+    <div class="sgrid">
+      <div class="scard sw rh" onclick="ripple(event)"><span class="sico">💬</span><div class="sname">WhatsApp</div></div>
+      <div class="scard sy rh" onclick="ripple(event)"><span class="sico">▶️</span><div class="sname">YouTube</div></div>
+      <div class="scard si2 rh" onclick="ripple(event)"><span class="sico">📸</span><div class="sname">Instagram</div></div>
+      <div class="scard sfb rh" onclick="ripple(event)"><span class="sico">📘</span><div class="sname">Facebook</div></div>
+      <div class="scard stg rh" onclick="ripple(event)"><span class="sico">✈️</span><div class="sname">Telegram</div></div>
+      <div class="scard stw rh" onclick="ripple(event)"><span class="sico">🐦</span><div class="sname">Twitter / X</div></div>
+      <div class="scard sapp rh" onclick="ripple(event)"><span class="sico">📲</span><div class="sname">Android App</div></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="flogo">RankSarathi.in</div>
+  <div class="flinks"><a>About Us</a><a>Contact</a><a>Disclaimer</a><a>Privacy Policy</a><a>Terms</a><a>Sitemap</a></div>
+  <div class="fcopy">© 2026 RankSarathi.in — India's Most Trusted Job Portal.</div>
+</footer>
+
+<script>
+// ════════════════════════════════════
+// CORE UI FUNCTIONS
+// ════════════════════════════════════
+function ripple(e){
+  const el=e.currentTarget,r=document.createElement('span');
+  r.classList.add('ripple');
+  const rect=el.getBoundingClientRect(),size=Math.max(rect.width,rect.height)*1.4;
+  r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  el.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+  const b=document.createElement('div');b.classList.add('burst');
+  b.style.cssText=`left:${e.clientX}px;top:${e.clientY}px`;
+  document.body.appendChild(b);b.addEventListener('animationend',()=>b.remove());
+}
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type;
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function openPage(id){
+  const el=document.getElementById('page-'+id);
+  if(!el)return;
+  el.classList.add('active');el.scrollTop=0;
+  document.body.style.overflow='hidden';
+  // Load data for dynamic pages
+  if(id==='jobs') loadPageJobs();
+  if(id==='results') loadPageResults();
+  if(id==='admitcards') loadPageAdmits();
+}
+function closePage(id){
+  document.getElementById('page-'+id)?.classList.remove('active');
+  document.body.style.overflow='';
+}
+function goHome(e){
+  ripple(e);
+  document.querySelectorAll('.page-overlay').forEach(p=>p.classList.remove('active'));
+  document.body.style.overflow='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function scrollToSec(id){
+  document.body.style.overflow='';
+  setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function toggleDrawer(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+function handleSearch(inp){document.getElementById('nsClear').classList.toggle('show',inp.value.length>0);}
+function clearSearch(){const inp=document.getElementById('nsInput');inp.value='';document.getElementById('nsClear').classList.remove('show');inp.focus();}
+let statesOpen=false;
+function toggleStates(){
+  statesOpen=!statesOpen;
+  document.querySelectorAll('.s-extra').forEach((el,i)=>{
+    if(statesOpen)setTimeout(()=>el.classList.add('s-show'),i*60);
+    else el.classList.remove('s-show');
+  });
+  document.getElementById('stateBtn').textContent=statesOpen?'Show Less ←':'View All →';
+  document.getElementById('stateGrid').style.gridTemplateColumns=statesOpen?'repeat(auto-fill,minmax(140px,1fr))':'repeat(4,1fr)';
+}
+const obs=new IntersectionObserver(ens=>{ens.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');obs.unobserve(en.target);}});},{threshold:0.07});
+document.querySelectorAll('.rev').forEach(r=>obs.observe(r));
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').style.background=window.scrollY>20?'rgba(7,7,14,.9)':'rgba(12,12,22,.72)';
+});
+
+// ════════════════════════════════════
+// ISLAND
+// ════════════════════════════════════
+let islandOpen=false;
+function toggleIsland(e){ripple(e);e.stopPropagation();islandOpen=!islandOpen;document.getElementById('island').classList.toggle('expanded',islandOpen);}
+function closeIsland(e){e.stopPropagation();islandOpen=false;document.getElementById('island').classList.remove('expanded');}
+
+// ════════════════════════════════════
+// CARD RENDERER
+// ════════════════════════════════════
+function renderJobCard(job,onclick){
+  const tags = (job.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+  const tagHtml = tags.map(t=>{
+    if(t==='HOT') return `<span class="tag th">🔥 Hot</span>`;
+    if(t==='NEW') return `<span class="tag tn">NEW</span>`;
+    return `<span class="tag tb">${t}</span>`;
+  }).join('');
+  const isExpired = job.last_date && new Date(job.last_date) < new Date();
+  const dateStr = job.last_date ? new Date(job.last_date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
+  return `
+    <div class="jcard rh${isExpired?' expired':''}" onclick="${onclick}">
+      <div class="ct">
+        <div class="ci si-b">${job.icon||'🏛️'}</div>
+        <div class="ctitle">${job.title}</div>
+      </div>
+      <div class="cmeta">${tagHtml}<span class="tag tb">${job.category||'Govt'}</span>${job.total_posts?`<span class="tag tp">${job.total_posts} Posts</span>`:''}</div>
+      <div class="cfoot">
+        <span class="cdate">📅 Last Date: ${dateStr}${isExpired?' <span style="color:var(--red);font-size:10px;"> (Expired)</span>':''}</span>
+        <div class="carr">→</div>
+      </div>
+    </div>`;
+}
+function renderResultCard(r){
+  const d = r.release_date?new Date(r.release_date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
+  return `<div class="jcard rh" onclick="ripple(event);if('${r.result_link}')window.open('${r.result_link}','_blank')">
+    <div class="ct"><div class="ci si-g">${r.icon||'🏆'}</div><div class="ctitle">${r.title}</div></div>
+    <div class="cmeta"><span class="tag th">🔥 OUT</span><span class="tag tb">${r.organization||'Result'}</span></div>
+    <div class="cfoot"><span class="cdate">📅 Released: ${d}</span><div class="carr">→</div></div>
+  </div>`;
+}
+function renderAdmitCard(a){
+  return `<div class="jcard admit rh" onclick="ripple(event);if('${a.download_link}')window.open('${a.download_link}','_blank')">
+    <div class="ct"><div class="ci si-r">${a.icon||'📋'}</div><div class="ctitle">${a.title}</div></div>
+    <div class="cmeta"><span class="tag tn">Available</span><span class="tag tb">${a.organization||'Admit Card'}</span></div>
+    <div class="cfoot"><span class="cdate">📅 Exam: ${a.exam_date||'TBA'}</span><div class="carr">↓</div></div>
+  </div>`;
+}
+
+// ════════════════════════════════════
+// LOAD HOME DATA
+// ════════════════════════════════════
+async function loadHomeData(){
+  try{
+    // Auto-expire old jobs silently every time site loads
+    db.rpc('expire_old_jobs').catch(()=>{});
+    // Jobs
+    const jobs = await db.get('jobs','&limit=6');
+    const jobGrid = document.getElementById('home-jobs-grid');
+    if(jobs && jobs.length){
+      jobGrid.innerHTML = jobs.map(j=>renderJobCard(j,`openJobDetail(${j.id});ripple(event)`)).join('');
+    } else {
+      jobGrid.innerHTML='<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No jobs found. Add jobs from the admin panel.</div>';
+    }
+
+    // Results
+    const results = await db.get('results','&limit=4');
+    const rGrid = document.getElementById('home-results-grid');
+    rGrid.innerHTML = results&&results.length ? results.map(renderResultCard).join('') : '<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No results yet.</div>';
+
+    // Admit Cards
+    const admits = await db.get('admit_cards','&limit=4');
+    const aGrid = document.getElementById('home-admits-grid');
+    aGrid.innerHTML = admits&&admits.length ? admits.map(renderAdmitCard).join('') : '<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No admit cards yet.</div>';
+
+    // Island ticker
+    if(jobs&&jobs.length){
+      const allItems = jobs.slice(0,5);
+      document.getElementById('island-text').textContent = `🔴 ${jobs[0].title.substring(0,40)}...`;
+      document.getElementById('island-badge').textContent = `${jobs.length} NEW`;
+      document.getElementById('island-list').innerHTML = allItems.map(j=>`
+        <div class="island-item"><span>${j.icon||'💼'}</span><span>${j.title.substring(0,50)}${j.title.length>50?'...':''}</span></div>`).join('');
+    }
+
+    // Ticker
+    const all = [...(jobs||[]),...(results||[]),...(admits||[])];
+    if(all.length){
+      const items = [...all,...all].map(i=>`<span>${i.title}</span>`).join('');
+      document.getElementById('ticker-inner').innerHTML = items;
+    }
+
+    // Category counts
+    if(jobs&&jobs.length){
+      const cats = {govt:0,police:0,medical:0,teaching:0,banking:0,engineering:0,forest:0,clerk:0};
+      jobs.forEach(j=>{
+        const c=(j.category||'').toLowerCase();
+        if(c.includes('state')||c.includes('central')||c.includes('psu')) cats.govt++;
+        else if(c.includes('police')||c.includes('defence')) cats.police++;
+        else if(c.includes('medical')||c.includes('health')) cats.medical++;
+        else if(c.includes('teach')) cats.teaching++;
+        else if(c.includes('bank')) cats.banking++;
+        else if(c.includes('engin')) cats.engineering++;
+        else if(c.includes('forest')) cats.forest++;
+        else cats.clerk++;
+      });
+      Object.keys(cats).forEach(k=>{
+        const el=document.getElementById('cnt-'+k);
+        if(el) el.textContent=`${cats[k]} Jobs`;
+      });
+    }
+
+    // Island rotation
+    if(jobs&&jobs.length){
+      let mi=0;
+      setInterval(()=>{
+        if(islandOpen)return;
+        mi=(mi+1)%Math.min(jobs.length,5);
+        const t=document.getElementById('island-text');
+        t.style.opacity='0';
+        setTimeout(()=>{t.textContent=`🔴 ${jobs[mi].title.substring(0,40)}...`;t.style.transition='opacity .25s';t.style.opacity='1';},260);
+      },4200);
+    }
+  } catch(err){
+    console.error('Failed to load data:',err);
+    document.getElementById('home-jobs-grid').innerHTML='<div style="color:var(--red);grid-column:1/-1;text-align:center;padding:40px;">⚠️ Could not connect to database. Check your Supabase config.</div>';
+  }
+}
+
+// ════════════════════════════════════
+// LOAD PAGE DATA
+// ════════════════════════════════════
+async function loadPageJobs(){
+  const grid = document.getElementById('jobs-page-grid');
+  const jobs = await db.get('jobs');
+  grid.innerHTML = jobs&&jobs.length ? jobs.map(j=>renderJobCard(j,`openJobDetail(${j.id});ripple(event)`)).join('') : '<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No jobs found.</div>';
+}
+async function loadPageResults(){
+  const grid = document.getElementById('results-page-grid');
+  const results = await db.get('results');
+  grid.innerHTML = results&&results.length ? results.map(renderResultCard).join('') : '<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No results found.</div>';
+}
+async function loadPageAdmits(){
+  const grid = document.getElementById('admitcards-page-grid');
+  const admits = await db.get('admit_cards');
+  grid.innerHTML = admits&&admits.length ? admits.map(renderAdmitCard).join('') : '<div style="color:var(--text2);grid-column:1/-1;text-align:center;padding:40px;">No admit cards found.</div>';
+}
+
+// ════════════════════════════════════
+// JOB DETAIL POPUP (from DB)
+// ════════════════════════════════════
+async function openJobDetail(id){
+  document.getElementById('jdContent').innerHTML='<div style="padding:40px;text-align:center;"><div class="skeleton" style="height:48px;border-radius:14px;margin-bottom:16px;"></div><div class="skeleton" style="height:20px;width:60%;border-radius:8px;margin:0 auto;"></div></div>';
+  document.getElementById('jdOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+
+  const job = await db.getById('jobs',id);
+  if(!job){document.getElementById('jdContent').innerHTML='<div style="padding:40px;text-align:center;color:var(--red);">Job not found.</div>';return;}
+
+  const vacancies = await db.getVacancies(id);
+  const tags=(job.tags||'NEW').split(',').map(t=>t.trim()).filter(Boolean);
+  const tagsHtml=tags.map(t=>{
+    if(t==='HOT')return`<span class="jd-tag jd-tag-hot">🔥 Hot</span>`;
+    if(t==='NEW')return`<span class="jd-tag jd-tag-new">NEW</span>`;
+    return`<span class="jd-tag jd-tag-blue">${t}</span>`;
+  }).join('');
+
+  const fmtDate=d=>d?new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
+
+  const stripItems=[
+    {l:'Total Posts',v:job.total_posts||'—',cls:'green'},
+    {l:'Last Date',v:fmtDate(job.last_date),cls:'red'},
+    {l:'Apply Mode',v:'Online',cls:''},
+    {l:'Fee',v:job.app_fee||'Nil',cls:'gold'},
+    {l:'State',v:job.state||'Assam',cls:''},
+    {l:'Category',v:job.category||'Govt',cls:''},
+  ];
+  const stripHtml=stripItems.map(s=>`<div class="jd-strip-item"><div class="jd-strip-label">${s.l}</div><div class="jd-strip-val ${s.cls}">${s.v}</div></div>`).join('');
+
+  const detailRows=[
+    ['Post Name',job.title],['Organization',job.organization],
+    ['Total Vacancies',(job.total_posts||'—')+' Posts'],
+    ['Qualification',job.qualification||'—'],
+    ['Age Limit',job.age_limit||'—'],
+    ['Age Relaxation',job.age_relaxation||'As per Govt rules'],
+    ['Application Fee',job.app_fee||'Nil'],
+    ['Apply Start',fmtDate(job.apply_start)],
+    ['Last Date',fmtDate(job.last_date)],
+    ['Selection Process',job.selection_process||'—'],
+    ['Salary',job.salary||'—'],
+    ['Official Website',job.official_website||'—'],
+  ].map(d=>`<tr><td>${d[0]}</td><td>${d[1]}</td></tr>`).join('');
+
+  const vacHtml=vacancies&&vacancies.length?`
+    <div class="jd-sec-heading">📊 Vacancy Details</div>
+    <table class="jd-vac-table">
+      <thead><tr><th>Category</th><th>Posts</th><th>Qualification</th></tr></thead>
+      <tbody>${vacancies.map(v=>`<tr><td>${v.category}</td><td>${v.posts}</td><td>${v.qualification||'—'}</td></tr>`).join('')}</tbody>
+    </table>`:'';
+
+  const linksHtml=[
+    ['Application Form',job.apply_link||'#'],
+    ['Official Notification',job.notification_link||'#'],
+    ['WhatsApp Channel','#'],
+    ['Install Android App','#'],
+    ['Official Website',job.official_website?`https://${job.official_website}`:'#'],
+  ].map(l=>`<tr><td>${l[0]}</td><td><a class="jd-click-btn" href="${l[1]}" target="_blank">Click Here →</a></td></tr>`).join('');
+
+  document.getElementById('jdContent').innerHTML=`
+    <div class="jd-header">
+      <div class="jd-org-row">
+        <div class="jd-org-icon">${job.icon||'🏛️'}</div>
+        <div class="jd-org-info"><div class="jd-org-name">${job.organization}</div><div class="jd-title">${job.title}</div></div>
+      </div>
+      <div class="jd-tags">${tagsHtml}</div>
+    </div>
+    <div class="jd-strip">${stripHtml}</div>
+    <div class="jd-sec-heading">📋 Recruitment Details</div>
+    <table class="jd-table">${detailRows}</table>
+    ${vacHtml}
+    <div class="jd-sec-heading">🔗 Important Links</div>
+    <table class="jd-links-table">${linksHtml}</table>
+    <div class="jd-apply-row">
+      <a class="jd-apply-btn rh" href="${job.apply_link||'#'}" target="_blank" onclick="ripple(event)">✅ Apply Now</a>
+      <a class="jd-notif-btn rh" href="${job.notification_link||'#'}" target="_blank" onclick="ripple(event)">📄 Download Notification</a>
+    </div>`;
+}
+function closeJobDetail(){document.getElementById('jdOverlay').classList.remove('active');document.body.style.overflow='';}
+function handleJdClick(e){if(e.target===document.getElementById('jdOverlay'))closeJobDetail();}
+
+// ════════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════════
+function openAdmin(){
+  document.getElementById('adminLogin').style.display='flex';
+  document.getElementById('loginPwd').value='';
+  document.getElementById('loginError').style.display='none';
+}
+function doLogin(){
+  const pwd=document.getElementById('loginPwd').value;
+  if(pwd===ADMIN_PASSWORD){
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    document.body.style.overflow='hidden';
+    loadDashboard();
+    loadAdminJobs();
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+function closeAdmin(){
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminLogin').style.display='none';
+  document.body.style.overflow='';
+}
+function switchAdminTab(name,btn){
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// Load Dashboard stats
+async function loadDashboard(){
+  const [jobs,results,admits] = await Promise.all([
+    db.get('jobs'),db.get('results'),db.get('admit_cards')
+  ]);
+  const allJobs = await db.getAll('jobs');
+  const expired = (allJobs||[]).filter(j=>j.last_date && new Date(j.last_date)<new Date());
+  document.getElementById('stat-jobs').textContent=(jobs||[]).length;
+  document.getElementById('stat-results').textContent=(results||[]).length;
+  document.getElementById('stat-admits').textContent=(admits||[]).length;
+  document.getElementById('stat-expired').textContent=expired.length;
+
+  // Recent jobs list in dashboard
+  if(jobs&&jobs.length){
+    document.getElementById('recent-jobs-admin').innerHTML=`
+      <div class="admin-form-card">
+        <div class="admin-form-title">📋 Recent Active Jobs</div>
+        <div class="admin-list">
+          ${jobs.slice(0,5).map(j=>`
+            <div class="admin-item">
+              <div class="admin-item-icon">${j.icon||'🏛️'}</div>
+              <div class="admin-item-info">
+                <div class="admin-item-title">${j.title}</div>
+                <div class="admin-item-meta">📅 Last Date: ${j.last_date||'—'} &nbsp;|&nbsp; ${j.category}</div>
+              </div>
+              <div class="admin-item-actions">
+                <span class="badge-active">Active</span>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+// Load admin jobs list
+async function loadAdminJobs(){
+  const jobs = await db.getAll('jobs');
+  const list = document.getElementById('admin-jobs-list');
+  if(!jobs||!jobs.length){list.innerHTML='<div style="color:var(--text2);text-align:center;padding:30px;">No jobs in database. Add some!</div>';return;}
+  const today=new Date();
+  list.innerHTML=jobs.map(j=>{
+    const isExpired=j.last_date&&new Date(j.last_date)<today;
+    return`<div class="admin-item">
+      <div class="admin-item-icon">${j.icon||'🏛️'}</div>
+      <div class="admin-item-info">
+        <div class="admin-item-title">${j.title}</div>
+        <div class="admin-item-meta">📅 Last Date: ${j.last_date||'—'} &nbsp;|&nbsp; ${j.category||'Govt'} &nbsp;|&nbsp; ${j.state||'Assam'}</div>
+      </div>
+      <div class="admin-item-actions">
+        ${isExpired?'<span class="badge-expired">Expired</span>':'<span class="badge-active">Active</span>'}
+        <button class="btn-del" onclick="deleteJob(${j.id})">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Save Job
+async function saveJob(){
+  const title=document.getElementById('f-title').value.trim();
+  const lastdate=document.getElementById('f-lastdate').value;
+  if(!title){showToast('Please enter a job title','error');return;}
+  if(!lastdate){showToast('Please enter a last date','error');return;}
+
+  const jobData={
+    title,
+    organization:document.getElementById('f-org').value.trim(),
+    icon:document.getElementById('f-icon').value.trim()||'🏛️',
+    category:document.getElementById('f-category').value,
+    state:document.getElementById('f-state').value,
+    total_posts:document.getElementById('f-posts').value.trim(),
+    qualification:document.getElementById('f-qual').value.trim(),
+    age_limit:document.getElementById('f-age').value.trim(),
+    age_relaxation:document.getElementById('f-agerelax').value.trim(),
+    app_fee:document.getElementById('f-fee').value.trim(),
+    apply_start:document.getElementById('f-start').value||null,
+    last_date:lastdate,
+    salary:document.getElementById('f-salary').value.trim(),
+    selection_process:document.getElementById('f-selection').value.trim(),
+    official_website:document.getElementById('f-website').value.trim(),
+    apply_link:document.getElementById('f-applylink').value.trim(),
+    notification_link:document.getElementById('f-notiflink').value.trim(),
+    tags:document.getElementById('f-tags').value.trim()||'NEW',
+    is_hot:document.getElementById('f-hot').checked,
+    is_active:true
+  };
+
+  const s=document.getElementById('save-status');
+  s.style.display='block';s.textContent='Saving...';
+
+  const result=await db.post('jobs',jobData);
+  if(result&&result[0]){
+    const jobId=result[0].id;
+    // Save vacancies
+    const vacRows=document.querySelectorAll('.vacancy-row');
+    for(const row of vacRows){
+      const cat=row.querySelector('.vac-cat').value.trim();
+      const posts=row.querySelector('.vac-posts').value;
+      const qual=row.querySelector('.vac-qual').value.trim();
+      if(cat&&posts) await db.post('vacancies',{job_id:jobId,category:cat,posts:parseInt(posts),qualification:qual});
+    }
+    showToast('✅ Job saved successfully!');
+    s.textContent='✅ Job saved! ID: '+jobId;
+    clearJobForm();
+    loadDashboard();
+    loadHomeData(); // Refresh home
+  } else {
+    showToast('❌ Failed to save job. Check your Supabase config.','error');
+    s.textContent='❌ Error saving job.';
+  }
+}
+
+// Save Result
+async function saveResult(){
+  const title=document.getElementById('r-title').value.trim();
+  if(!title){showToast('Enter a result title','error');return;}
+  const data={title,organization:document.getElementById('r-org').value.trim(),icon:document.getElementById('r-icon').value||'🏆',release_date:document.getElementById('r-date').value||null,result_link:document.getElementById('r-link').value.trim(),is_active:true};
+  const r=await db.post('results',data);
+  if(r&&r[0]){showToast('✅ Result saved!');document.getElementById('r-title').value='';loadHomeData();}
+  else showToast('❌ Failed to save result','error');
+}
+
+// Save Admit Card
+async function saveAdmitCard(){
+  const title=document.getElementById('a-title').value.trim();
+  if(!title){showToast('Enter an admit card title','error');return;}
+  const data={title,organization:document.getElementById('a-org').value.trim(),icon:document.getElementById('a-icon').value||'📋',exam_date:document.getElementById('a-examdate').value.trim(),download_link:document.getElementById('a-link').value.trim(),is_active:true};
+  const r=await db.post('admit_cards',data);
+  if(r&&r[0]){showToast('✅ Admit Card saved!');document.getElementById('a-title').value='';loadHomeData();}
+  else showToast('❌ Failed to save','error');
+}
+
+// Delete Job
+async function deleteJob(id){
+  if(!confirm('Delete this job? This cannot be undone.'))return;
+  const ok=await db.del('jobs',id);
+  if(ok){showToast('🗑️ Job deleted');loadAdminJobs();loadDashboard();loadHomeData();}
+  else showToast('❌ Delete failed','error');
+}
+
+// Delete all expired
+async function deleteExpiredJobs(){
+  if(!confirm('Delete ALL jobs where last date has passed?'))return;
+  const jobs=await db.getAll('jobs');
+  const expired=(jobs||[]).filter(j=>j.last_date&&new Date(j.last_date)<new Date());
+  for(const j of expired) await db.del('jobs',j.id);
+  showToast(`🗑️ Deleted ${expired.length} expired jobs`);
+  loadAdminJobs();loadDashboard();loadHomeData();
+}
+
+// Form helpers
+function clearJobForm(){
+  ['f-title','f-org','f-posts','f-qual','f-age','f-agerelax','f-fee','f-salary','f-selection','f-website','f-applylink','f-notiflink','f-tags','f-start','f-lastdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-icon').value='🏛️';
+  document.getElementById('f-hot').checked=false;
+  document.getElementById('vacancy-rows').innerHTML=`<div class="vacancy-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:center;"><input class="form-input vac-cat" placeholder="Category (e.g. UR)"><input class="form-input vac-posts" placeholder="Posts" type="number"><input class="form-input vac-qual" placeholder="Qualification"><button onclick="removeVacRow(this)" style="background:rgba(255,94,122,.1);border:1px solid rgba(255,94,122,.2);color:var(--red);padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;">✕</button></div>`;
+  document.getElementById('faq-rows').innerHTML=`<div class="faq-row" style="margin-bottom:10px;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.03);padding:12px;border-radius:11px;border:1px solid var(--gb);"><input class="form-input faq-q" placeholder="FAQ Question"><textarea class="form-textarea faq-a" placeholder="FAQ Answer" rows="2"></textarea></div>`;
+  document.getElementById('save-status').style.display='none';
+}
+function addVacRow(){
+  document.getElementById('vacancy-rows').insertAdjacentHTML('beforeend',`<div class="vacancy-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:center;"><input class="form-input vac-cat" placeholder="Category"><input class="form-input vac-posts" placeholder="Posts" type="number"><input class="form-input vac-qual" placeholder="Qualification"><button onclick="removeVacRow(this)" style="background:rgba(255,94,122,.1);border:1px solid rgba(255,94,122,.2);color:var(--red);padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;">✕</button></div>`);
+}
+function removeVacRow(btn){btn.closest('.vacancy-row').remove();}
+function addFaqRow(){
+  document.getElementById('faq-rows').insertAdjacentHTML('beforeend',`<div class="faq-row" style="margin-bottom:10px;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.03);padding:12px;border-radius:11px;border:1px solid var(--gb);"><input class="form-input faq-q" placeholder="FAQ Question"><textarea class="form-textarea faq-a" placeholder="FAQ Answer" rows="2"></textarea></div>`);
+}
+
+// Submit Job (public form)
+async function submitJobForm(){
+  const title=document.getElementById('sj-title').value.trim();
+  const org=document.getElementById('sj-org').value.trim();
+  const posts=document.getElementById('sj-posts').value.trim();
+  const date=document.getElementById('sj-date').value;
+  const link=document.getElementById('sj-link').value.trim();
+  if(!title||!date){showToast('Please fill required fields','error');return;}
+  const data={title,organization:org,total_posts:posts,last_date:date,notification_link:link,is_active:false,tags:'SUBMITTED',category:'Other',state:'Assam'};
+  const r=await db.post('jobs',data);
+  if(r&&r[0]) showToast('✅ Submitted! We will review and publish it.');
+  else showToast('❌ Submission failed. Try again.','error');
+}
+
+// ── SECRET ADMIN ACCESS: type "admin" on keyboard ──
+let adminKey='';
+document.addEventListener('keydown',e=>{
+  adminKey+=e.key;
+  if(adminKey.endsWith('admin')) openAdmin();
+  if(adminKey.length>10) adminKey=adminKey.slice(-10);
+  if(e.key==='Escape'){
+    document.querySelectorAll('.page-overlay.active').forEach(p=>p.classList.remove('active'));
+    closeJobDetail();closeAdmin();
+    document.body.style.overflow='';
+  }
+});
+// On mobile — triple tap the logo opens admin
+let tapCount=0;
+document.querySelector('.nav-logo').addEventListener('click',()=>{
+  tapCount++;
+  if(tapCount>=3){tapCount=0;openAdmin();}
+  setTimeout(()=>tapCount=0,1000);
+});
+
+// ── INIT ──
+loadHomeData();
+</script>
+</body>
+</html>
